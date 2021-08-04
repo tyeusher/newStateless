@@ -1,22 +1,29 @@
 import { Header, Nav, Main, Footer } from "./components";
-import {
-  AddPicturesToGallery,
-  GalleryPictures,
-  PrintFormOnSubmit,
-} from "./lib";
+import * as state from "./store";
+import Navigo from "navigo";
+import { capitalize } from "lodash";
 
-function render() {
+const router = new Navigo(window.location.origin);
+
+router
+  .on({
+    ":page": (params) => render(state[capitalize(params.page)]),
+    "/": () => render(state.Home),
+  })
+  .resolve();
+
+function render(st = state.Home) {
   document.querySelector("#root").innerHTML = `
-    ${Header()}
-    ${Nav()}
-    ${Main()}
+    ${Header(st)}
+    ${Nav(state.Links)}
+    ${Main(st)}
     ${Footer()}
-  `;
+    `;
 
-  addEventListeners();
+  router.updatePageLinks();
 }
 
-render();
+render(state.Home);
 
 function addEventListeners() {
   // add menu toggle to bars icon in nav bar
@@ -25,13 +32,12 @@ function addEventListeners() {
     .addEventListener("click", () =>
       document.querySelector("nav > ul").classList.toggle("hidden--mobile")
     );
-
-  // populating gallery with pictures
-  const gallerySection = document.querySelector("#gallery");
-  // using modules to populate gallery with pictures
-  AddPicturesToGallery(GalleryPictures, gallerySection);
-
-  // handle form submission with PrintFormOnSubmit module
-  const form = document.querySelector("form");
-  PrintFormOnSubmit(form);
 }
+//    populating gallery with pictures
+//   const gallerySection = document.querySelector("#gallery");
+//   // using modules to populate gallery with pictures
+//   AddPicturesToGallery(GalleryPictures, gallerySection);
+
+//   // handle form submission with PrintFormOnSubmit module
+//   const form = document.querySelector("form");
+//   PrintFormOnSubmit(form);
