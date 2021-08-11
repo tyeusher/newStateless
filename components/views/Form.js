@@ -1,6 +1,6 @@
 import html from "html-literal";
 
-export default () => html`
+export default (st) => html`
   <form id="register" method="POST" action="">
     <div>
       <label for="url">Phot URL:</label>
