@@ -84,6 +84,19 @@ router.hooks({
         : "Home";
 
     switch (page) {
+      case "Pizza":
+        axios
+          .get(`${process.env.API}/pizzas`)
+          .then(response => {
+            state[page].pizzas = response.data;
+            console.log(state[page].pizzas)
+            done();
+          })
+          .catch(error => {
+            console.log("I died trying to get Pizza", error);
+            done();
+          });
+        break;
       case "Blog":
         state.Blog.posts = [];
         axios
