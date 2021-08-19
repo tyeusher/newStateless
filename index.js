@@ -62,21 +62,48 @@ function addEventListeners(st) {
       render(state.Gallery);
     });
   }
+
+  if (st.view === "Order") {
+    document.querySelector("form").addEventListener("submit", event => {
+      event.preventDefault();
+      const inputList = event.target.elements;
+
+      const toppings = [];
+      for (let input of inputList.toppings) {
+        if (input.checked) {
+          toppings.push(input.value);
+        }
+      }
+
+      const requestData = {
+        crust: inputList.crust.value,
+        cheese: inputList.cheese.value,
+        sauce: inputList.sauce.value,
+        toppings: toppings
+      };
+
+      axios
+        .post(`${process.env.API}/pizzas`, requestData)
+        .then(response => {
+          state.Pizza.pizzas.push(response.data);
+          router.navigate("/Pizza");
+        })
+        .catch(error => {
+          console.log("It puked", error);
+        });
+    });
+  }
 }
 
-// get data from an API endpoint
-// axios
-//   .get("https://jsonplaceholder.typicode.com/posts")
-//   // handle the response from the API
-//   .then((response) => {
-//     // for each post in the response Array,
-//     response.data.forEach((post) => {
-//       // add it to state.Blog.posts
-//       state.Blog.posts.push(post);
-//     });
-//   });
 
-router.hooks({
+
+
+
+
+
+
+
+router.hooks({//
   before: (done, params) => {
     const page =
       params && params.hasOwnProperty("page")
@@ -84,7 +111,7 @@ router.hooks({
         : "Home";
 
     switch (page) {
-      case "Pizza":
+      case "Pizza":// looks for the page pizza
         axios
           .get(`${process.env.API}/pizzas`)
           .then(response => {
@@ -97,13 +124,13 @@ router.hooks({
             done();
           });
         break;
-      case "Blog":
-        state.Blog.posts = [];
+      case "Blog"://look for thus view page
+        state.Blog.posts = [];//array to put it in
         axios
-          .get("https://jsonplaceholder.typicode.com/posts/")
-          .then((response) => {
+          .get("https://jsonplaceholder.typicode.com/posts/")//getting the api
+          .then((response) => {//then statement
             response.data.forEach((post) => {
-              state.Blog.posts.push(post);
+              state.Blog.posts.push(post);//pushing the data
             });
             done();
             // console.log(state.Blog.posts);

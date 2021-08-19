@@ -5,4 +5,5 @@ export default [
   { title: "Form", text: "Form" },
   { title: "Blog", text: "Blog" },
   { title: "Pizza", text: "Pizza" },
+  { title: "Order", text: "Order a Pizza" },
 ];
